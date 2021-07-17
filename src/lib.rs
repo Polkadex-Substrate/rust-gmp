@@ -12,10 +12,7 @@ extern crate sgx_tstd as std;
 
 extern crate libc;
 extern crate num_traits;
-
-#[cfg(feature="serde")]
 extern crate serde;
-#[cfg(all(test, feature="serde"))]
 extern crate serde_json;
 
 mod ffi;
