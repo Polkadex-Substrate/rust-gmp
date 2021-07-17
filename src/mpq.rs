@@ -7,11 +7,12 @@ use std::ffi::CString;
 use std::str::FromStr;
 use std::error::Error;
 use std::convert::From;
-use std::mem::uninitialized;
+// use std::mem::uninitialized;
 use std::fmt;
 use std::cmp::Ordering::{self, Greater, Less, Equal};
 use std::ops::{Div, DivAssign, Mul, MulAssign, Add, AddAssign, Sub, SubAssign, Neg};
 use num_traits::{Zero, One};
+use std::mem::MaybeUninit;
 
 #[repr(C)]
 pub struct mpq_struct {
@@ -72,7 +73,7 @@ impl Mpq {
 
     pub fn new() -> Mpq {
         unsafe {
-            let mut mpq = uninitialized();
+            let mut mpq = MaybeUninit::uninit().assume_init();
             __gmpq_init(&mut mpq);
             Mpq { mpq: mpq }
         }
@@ -206,7 +207,7 @@ impl Error for ParseMpqError {
         "invalid rational number"
     }
 
-    fn cause(&self) -> Option<&'static Error> {
+    fn cause(&self) -> Option<&'static dyn Error> {
         None
     }
 }

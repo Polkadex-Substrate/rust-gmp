@@ -1,6 +1,7 @@
 use libc::{c_int, c_ulong, c_void};
 use super::mpz::{mpz_struct, Mpz, mpz_ptr, mpz_srcptr, mp_bitcnt_t};
-use std::mem::uninitialized;
+// use std::mem::uninitialized;
+use std::mem::MaybeUninit;
 
 #[repr(C)]
 pub struct gmp_randstate_struct {
@@ -41,7 +42,7 @@ impl Drop for RandState {
 impl RandState {
     pub fn new() -> RandState {
         unsafe {
-            let mut state: gmp_randstate_struct = uninitialized();
+            let mut state: gmp_randstate_struct = MaybeUninit::uninit().assume_init();
             __gmp_randinit_default(&mut state);
             RandState { state: state }
         }
@@ -49,7 +50,7 @@ impl RandState {
 
     pub fn new_mt() -> RandState {
         unsafe {
-            let mut state: gmp_randstate_struct = uninitialized();
+            let mut state: gmp_randstate_struct = MaybeUninit::uninit().assume_init();
             __gmp_randinit_mt(&mut state);
             RandState { state: state }
         }
@@ -57,7 +58,7 @@ impl RandState {
 
     pub fn new_lc_2exp(a: Mpz, c: u64, m2exp: u64) -> RandState {
         unsafe {
-            let mut state: gmp_randstate_struct = uninitialized();
+            let mut state: gmp_randstate_struct = MaybeUninit::uninit().assume_init();
             __gmp_randinit_lc_2exp(&mut state, a.inner(), c as c_ulong, m2exp as c_ulong);
             RandState { state: state }
         }
@@ -65,7 +66,7 @@ impl RandState {
 
     pub fn new_lc_2exp_size(size: u64) -> RandState {
         unsafe {
-            let mut state: gmp_randstate_struct = uninitialized();
+            let mut state: gmp_randstate_struct = MaybeUninit::uninit().assume_init();
             __gmp_randinit_lc_2exp_size(&mut state, size as c_ulong);
             RandState { state: state }
         }
@@ -101,7 +102,7 @@ impl RandState {
 impl Clone for RandState {
     fn clone(&self) -> RandState {
         unsafe {
-            let mut state: gmp_randstate_struct = uninitialized();
+            let mut state: gmp_randstate_struct = MaybeUninit::uninit().assume_init();
             __gmp_randinit_set(&mut state, &self.state);
             RandState { state: state }
         }

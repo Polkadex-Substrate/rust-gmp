@@ -18,15 +18,18 @@ mod mpz {
     use super::super::mpz::Mpz;
     use super::super::mpz::ProbabPrimeResult;
     use super::super::sign::Sign;
+    extern crate sgx_tstd as std;
     use std::str::FromStr;
     use std::convert::{From, Into};
     use std::{i64, u64};
+    use std::string::ToString;
+    use std::vec::Vec;
 
     use std::hash::{Hash, Hasher};
     use std::collections::hash_map::DefaultHasher;
 
-    #[cfg(feature="serde")]
-    use serde_json;
+    // #[cfg(feature="serde")]
+    // use serde_json;
 
     #[test]
     fn test_set() {
@@ -578,15 +581,16 @@ mod mpz {
     #[test]
     fn test_serde() {
         let one: Mpz = From::<i64>::from(1);
-        assert_eq!(serde_json::to_string(&one).unwrap(), "\"1\"");
+        // assert_eq!(serde_json::to_string(&one).unwrap(), "\"1\"");
 
         let s_one = "\"1\"";
-        let o_one : Mpz = serde_json::from_str(&s_one).unwrap();
+        // let o_one : Mpz = serde_json::from_str(&s_one).unwrap();
         assert_eq!(o_one, one);
     }
 }
 
 mod rand {
+    extern crate sgx_tstd as std;
     use std::convert::From;
     use super::super::mpz::Mpz;
     use super::super::rand::RandState;
@@ -605,6 +609,7 @@ mod rand {
 }
 
 mod mpq {
+    extern crate sgx_tstd as std;
     use std::convert::From;
     use std::u64;
     use super::super::mpq::Mpq;
